@@ -1,2 +1,27 @@
 ---
-# tasks file for ansible-role-neo4j-library
+- name: Check if Neo4j Graph Algorithms is already installed
+  stat:
+    path: "{{ neo4j_graph_algorithms_install_path }}graph-algorithms-algo-{{ neo4j_graph_algorithms_version }}.jar"
+  register: check_neo4j_graph_algorithms_path
+
+- name: Download Neo4j Graph Algorithms
+  get_url:
+    url: "{{ neo4j_graph_algorithms_download_url }}"
+    dest: "{{ neo4j_graph_algorithms_install_path }}graph-algorithms-algo-{{ neo4j_graph_algorithms_version }}.jar"
+    mode: 0755
+  when: check_neo4j_graph_algorithms_path.stat.exists == False
+  notify: Restart Neo4j
+
+- name: Find older versions of Neo4j Graph Algorithms
+  find:
+    paths: "{{ neo4j_graph_algorithms_install_path }}"
+    patterns: 'graph-algorithms-algo*.jar'
+    excludes: "graph-algorithms-algo-{{ neo4j_graph_algorithms_version }}.jar"
+  register: old_neo4j_graph_algorithms
+
+- name: Remove older versions of Neo4j Graph Algorithms
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ old_neo4j_graph_algorithms.files }}"
+  notify: Restart Neo4j
