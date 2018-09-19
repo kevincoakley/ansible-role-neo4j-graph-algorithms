@@ -1,0 +1,6 @@
+[submodule "tests/roles/docker"]
+	path = tests/roles/docker
+	url = https://github.com/kevincoakley/ansible-role-docker.git
+[submodule "tests/roles/neo4j"]
+	path = tests/roles/neo4j
+	url = https://github.com/kevincoakley/ansible-role-neo4j.git
