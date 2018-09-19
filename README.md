@@ -1,5 +1,7 @@
-Role Name
-=========
+ansible-role-neo4j-graph-algorithms
+===================================
+
+[![Build Status](https://travis-ci.org/kevincoakley/ansible-role-neo4j-graph-algorithms.svg?branch=master)](https://travis-ci.org/kevincoakley/ansible-role-neo4j-graph-algorithms)
 
 A brief description of the role goes here.
 
