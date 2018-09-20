@@ -25,3 +25,31 @@
     state: absent
   with_items: "{{ old_neo4j_graph_algorithms.files }}"
   notify: Restart Neo4j
+
+- name: Check if dbms.security.procedures.unrestricted already exists in neo4j.conf
+  shell: grep "^dbms.security.procedures.unrestricted" /etc/neo4j/neo4j.conf
+  args:
+    executable: /bin/bash
+  register: dbms_security_procedures_unrestricted_return
+  check_mode: no
+  ignore_errors: yes
+  changed_when: no
+
+- name: Add the dbms.security.procedures.unrestricted config for enabling the Neo4j Graph Algorithms (New Line)
+  lineinfile:
+    path: /etc/neo4j/neo4j.conf
+    regexp: ^dbms.security.procedures.unrestricted
+    line: dbms.security.procedures.unrestricted=algo.*
+    backup: yes
+  when: dbms_security_procedures_unrestricted_return.rc == 1
+  notify: Restart Neo4j
+
+- name: Update the dbms.security.procedures.unrestricted config for enabling the Neo4j Graph Algorithms (Existing Line)
+  lineinfile:
+    path: /etc/neo4j/neo4j.conf
+    regexp: ^((dbms.security.procedures.unrestricted=)(?!.*algo.\*).*)
+    line: \1,algo.*
+    backrefs: yes
+    backup: yes
+  when: dbms_security_procedures_unrestricted_return.rc == 0
+  notify: Restart Neo4j
