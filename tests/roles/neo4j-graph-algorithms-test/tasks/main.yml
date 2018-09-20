@@ -1,4 +1,7 @@
 ---
+- name: Give the Neo4j time to start
+  pause: seconds=45
+
 - name: Set the Neo4j password to abc123 for testing
   shell: curl -H "Content-Type:application/json" -X POST -d '{"password":"abc123"}' -u neo4j:neo4j http://localhost:7474/user/neo4j/password
   args:
