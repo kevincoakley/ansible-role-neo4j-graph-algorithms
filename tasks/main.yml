@@ -9,7 +9,7 @@
     url: "{{ neo4j_graph_algorithms_download_url }}"
     dest: "{{ neo4j_graph_algorithms_install_path }}graph-algorithms-algo-{{ neo4j_graph_algorithms_version }}.jar"
     mode: 0755
-  when: check_neo4j_graph_algorithms_path.stat.exists == False
+  when: not check_neo4j_graph_algorithms_path.stat.exists
   notify: Restart Neo4j
 
 - name: Find older versions of Neo4j Graph Algorithms
@@ -31,16 +31,16 @@
   args:
     executable: /bin/bash
   register: dbms_security_procedures_unrestricted_return
-  check_mode: no
-  ignore_errors: yes
-  changed_when: no
+  check_mode: false
+  ignore_errors: true
+  changed_when: false
 
 - name: Add the dbms.security.procedures.unrestricted config for enabling the Neo4j Graph Algorithms (New Line)
   lineinfile:
     path: /etc/neo4j/neo4j.conf
     regexp: ^dbms.security.procedures.unrestricted
     line: dbms.security.procedures.unrestricted=algo.*
-    backup: yes
+    backup: true
   when: dbms_security_procedures_unrestricted_return.rc == 1
   notify: Restart Neo4j
 
@@ -49,7 +49,7 @@
     path: /etc/neo4j/neo4j.conf
     regexp: ^((dbms.security.procedures.unrestricted=)(?!.*algo.\*).*)
     line: \1,algo.*
-    backrefs: yes
-    backup: yes
+    backrefs: true
+    backup: true
   when: dbms_security_procedures_unrestricted_return.rc == 0
   notify: Restart Neo4j
