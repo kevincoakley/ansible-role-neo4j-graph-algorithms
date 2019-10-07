@@ -1,0 +1,25 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  roles:
+    - ansible-role-neo4j-graph-algorithms
+
+  post_tasks:
+    - name: Give the Neo4j time to start
+      pause: seconds=45
+
+    - name: Set the Neo4j password to abc123 for testing
+      shell: curl -H "Content-Type:application/json" -X POST -d '{"password":"abc123"}' -u neo4j:neo4j http://localhost:7474/user/neo4j/password
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Test listing all of the algo functions
+      shell: curl -H "Content-Type:application/json" -X POST -d '{"query":"CALL algo.list()"}' -u neo4j:abc123 http://localhost:7474/db/data/cypher
+      args:
+        executable: /bin/bash
+      register: test_neo4j_graph_algorithms_installed
+      failed_when: '"There is no procedure with the name `algo.list` registered for this database instance." in test_neo4j_graph_algorithms_installed.stdout'
+      changed_when: false

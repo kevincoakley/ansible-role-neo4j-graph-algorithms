@@ -1,0 +1,13 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+
+  vars:
+    - package:
+        - name: curl
+          ansible_os_family: Debian
+
+  roles:
+    - role: kevincoakley.package
+    - role: kevincoakley.neo4j
