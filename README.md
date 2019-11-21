@@ -1,7 +1,7 @@
 ansible-role-neo4j-graph-algorithms
 ===================================
 
-[![Build Status](https://travis-ci.org/kevincoakley/ansible-role-neo4j-graph-algorithms.svg?branch=master)](https://travis-ci.org/kevincoakley/ansible-role-neo4j-graph-algorithms)
+![](https://github.com/kevincoakley/ansible-role-neo4j-graph-algorithms/workflows/Molecule%20Test/badge.svg)
 
 Install Efficient Graph Algorithms for Neo4j (https://github.com/neo4j-contrib/neo4j-graph-algorithms) . Tested with Neo4j 3.5.4 on CentOS 7 and Ubuntu 18.04. 
 
